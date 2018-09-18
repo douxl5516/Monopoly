@@ -5,7 +5,7 @@ using namespace std;
 
 int main()
 {
-	Game* game = new Game;
+	Game* game = Game::getInstance();
 	game->init();
 	game->run();
 	game->term();

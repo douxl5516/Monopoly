@@ -4,11 +4,11 @@ using namespace std;
 #include "menu.h"
 #include "game.h"
 
-bool Menu::process(Game* game)
+bool Menu::process()
 {
 	show();
 	int choice = getChoice();
-	return doChoice(game, choice);
+	return doChoice(choice);
 }
 int  Menu::getChoice() const
 {
@@ -29,20 +29,20 @@ void MainMenu::show() const
 	cout << " Your selected:";
 }
 
-bool MainMenu::doChoice(Game* game, int choice)
+bool MainMenu::doChoice(int choice)
 {
 	switch (choice) {
 	case 1:
-		game->setCurMenu(MenuID::PLAYERS_MENU);
+		Game::getInstance()->setCurMenu(MenuID::PLAYERS_MENU);
 		break;
 	case 2:
-		game->setCurMenu(MenuID::LOAD_MENU);
+		Game::getInstance()->setCurMenu(MenuID::LOAD_MENU);
 		break;
 	case 3:
-		game->setCurMenu(MenuID::SAVE_MENU);
+		Game::getInstance()->setCurMenu(MenuID::SAVE_MENU);
 		break;
 	case 4:
-		game->setCurMenu(MenuID::OPTION_MENU);
+		Game::getInstance()->setCurMenu(MenuID::OPTION_MENU);
 		break;
 	case 5:
 		cout << "Playing ...." << endl;
@@ -67,7 +67,7 @@ void PlayersMenu::show() const
 	cout << "0. Back" << endl;
 	cout << " Your selected:";
 }
-bool PlayersMenu::doChoice(Game* game, int choice)
+bool PlayersMenu::doChoice(int choice)
 {
 	switch (choice) {
 	case 2:
@@ -82,7 +82,7 @@ bool PlayersMenu::doChoice(Game* game, int choice)
 	default:
 		break;
 	}
-	game->setCurMenu(MenuID::MAIN_MENU);
+	Game::getInstance()->setCurMenu(MenuID::MAIN_MENU);
 	return true;
 }
 ///-------载入菜单----------------------------------
@@ -97,7 +97,7 @@ void LoadMenu::show() const
 	cout << "0. Back" << endl;
 	cout << " Your selected:";
 }
-bool LoadMenu::doChoice(Game* game, int choice)
+bool LoadMenu::doChoice(int choice)
 {
 	switch (choice) {
 	case 1:
@@ -110,7 +110,7 @@ bool LoadMenu::doChoice(Game* game, int choice)
 	default:
 		break;
 	}
-	game->setCurMenu(MenuID::MAIN_MENU);
+	Game::getInstance()->setCurMenu(MenuID::MAIN_MENU);
 	return true;
 }
 ///-------保存菜单----------------------------------
@@ -125,7 +125,7 @@ void SaveMenu::show() const
 	cout << "0. Back" << endl;
 	cout << " Your selected:";
 }
-bool SaveMenu::doChoice(Game* game, int choice)
+bool SaveMenu::doChoice(int choice)
 {
 	switch (choice) {
 	case 1:
@@ -138,7 +138,7 @@ bool SaveMenu::doChoice(Game* game, int choice)
 	default:
 		break;
 	}
-	game->setCurMenu(MenuID::MAIN_MENU);
+	Game::getInstance()->setCurMenu(MenuID::MAIN_MENU);
 	return true;
 }
 
@@ -151,17 +151,17 @@ void OptionMenu::show() const
 	cout << "0. Back" << endl;
 	cout << " Your selected:";
 }
-bool OptionMenu::doChoice(Game* game, int choice)
+bool OptionMenu::doChoice(int choice)
 {
 	switch (choice) {
 	case 1:
-		game->setCurMenu(MenuID::VOLUME_MENU);
+		Game::getInstance()->setCurMenu(MenuID::VOLUME_MENU);
 		break;
 	case 2:
-		game->setCurMenu(MenuID::RESOLUTION_MENU);
+		Game::getInstance()->setCurMenu(MenuID::RESOLUTION_MENU);
 		break;
 	default:
-		game->setCurMenu(MenuID::MAIN_MENU);
+		Game::getInstance()->setCurMenu(MenuID::MAIN_MENU);
 		break;
 	}
 	return true;
@@ -172,10 +172,10 @@ void VolumeMenu::show() const
 	cout << "\n\tSet Volume" << endl;
 	cout << "input value(0-100)：";
 }
-bool VolumeMenu::doChoice(Game* game, int choice)
+bool VolumeMenu::doChoice(int choice)
 {
 	cout << "Set Volume = " << choice << endl;
-	game->setCurMenu(MenuID::OPTION_MENU);
+	Game::getInstance()->setCurMenu(MenuID::OPTION_MENU);
 	return true;
 }
 ///-------分辨率选项菜单----------------------------------
@@ -187,7 +187,7 @@ void ResolutionMenu::show() const
 	cout << "3. 1024X768" << endl;
 	cout << " Your selected:";
 }
-bool ResolutionMenu::doChoice(Game* game, int choice)
+bool ResolutionMenu::doChoice(int choice)
 {
 	switch (choice) {
 	case 1:
@@ -202,7 +202,7 @@ bool ResolutionMenu::doChoice(Game* game, int choice)
 	default:
 		break;
 	}
-	game->setCurMenu(MenuID::OPTION_MENU);
+	Game::getInstance()->setCurMenu(MenuID::OPTION_MENU);
 	return true;
 }
 
