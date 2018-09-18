@@ -45,7 +45,7 @@ bool MainMenu::doChoice(Game* game, int choice)
 		game->setCurMenu(MenuID::OPTION_MENU);
 		break;
 	case 5:
-		cout << "Game running" << endl;
+		cout << "Playing ...." << endl;
 		break;
 	default:
 		return false;
@@ -77,7 +77,7 @@ bool PlayersMenu::doChoice(Game* game, int choice)
 	case 6:
 	case 7:
 	case 8:
-		cout << "Set Players count:" <<choice<< endl;
+		cout << "Set Players count to " << choice << endl;
 		break;
 	default:
 		break;
@@ -105,7 +105,7 @@ bool LoadMenu::doChoice(Game* game, int choice)
 	case 3:
 	case 4:
 	case 5:
-		cout << "Load Recording from "<< choice << endl;
+		cout << "Load Recording from  " << choice << endl;
 		break;
 	default:
 		break;
@@ -133,7 +133,7 @@ bool SaveMenu::doChoice(Game* game, int choice)
 	case 3:
 	case 4:
 	case 5:
-		cout << "Save Recording to "<< choice << endl;
+		cout << "Save Recording to " << choice << endl;
 		break;
 	default:
 		break;
@@ -205,3 +205,4 @@ bool ResolutionMenu::doChoice(Game* game, int choice)
 	game->setCurMenu(MenuID::OPTION_MENU);
 	return true;
 }
+

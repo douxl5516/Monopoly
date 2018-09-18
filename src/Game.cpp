@@ -13,9 +13,9 @@ void Game::run()
 }
 void Game::term()
 {
-	delete curMenu;
+	MenuMgr::release();
 }
 void Game::setCurMenu(int menuID)
 {
-	curMenu=MenuMgr::getInstance()->getMenuInstance(menuID);
+	curMenu = MenuMgr::getInstance()->getMenuInstance(menuID);
 }

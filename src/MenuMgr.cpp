@@ -4,10 +4,7 @@ MenuMgr* MenuMgr::instance = nullptr;
 
 MenuMgr::~MenuMgr()
 {
-	delete instance;
-	for (int i = 0; i < MenuID::MENU_COUNT; i++) {
-		delete menus[i];
-	}
+	release();
 }
 
 MenuMgr* MenuMgr::getInstance() {
@@ -18,17 +15,34 @@ MenuMgr* MenuMgr::getInstance() {
 
 Menu * MenuMgr::getMenuInstance(int menuID)
 {
-	if(menuID<=MenuID::MENU_COUNT&&menuID>=0)
+	if (menuID <= MenuID::MENU_COUNT&&menuID >= 0)
 		return menus[menuID];
 	return nullptr;
 }
 
+void MenuMgr::release()
+{
+	if (instance != nullptr) {
+		delete instance;
+		instance = nullptr;
+	}
+
+	for (int i = 0; i < MenuID::MENU_COUNT; i++) {
+		if (menus[i] == nullptr)
+			continue;
+		delete menus[i];
+		menus[i] = nullptr;
+	}
+}
+
+AbstractMenuFactory* MenuMgr::fac = new MenuFactory();
+
 Menu* MenuMgr::menus[] = {
-	new MainMenu,
-	new PlayersMenu,
-	new LoadMenu,
-	new SaveMenu,
-	new OptionMenu,
-	new VolumeMenu,
-	new ResolutionMenu
+	fac->create(MenuID::MAIN_MENU),
+	fac->create(MenuID::PLAYERS_MENU),
+	fac->create(MenuID::LOAD_MENU),
+	fac->create(MenuID::SAVE_MENU),
+	fac->create(MenuID::OPTION_MENU),
+	fac->create(MenuID::VOLUME_MENU),
+	fac->create(MenuID::RESOLUTION_MENU),
 };
