@@ -33,6 +33,11 @@ void MenuMgr::release()
 		delete menus[i];
 		menus[i] = nullptr;
 	}
+
+	if (fac != nullptr) {
+		delete fac;
+		fac = nullptr;
+	}
 }
 
 AbstractMenuFactory* MenuMgr::fac = new MenuFactory();

@@ -45,7 +45,7 @@ bool MainMenu::doChoice(int choice)
 		Game::getInstance()->setCurMenu(MenuID::OPTION_MENU);
 		break;
 	case 5:
-		cout << "Playing ...." << endl;
+		Game::getInstance()->play();
 		break;
 	default:
 		return false;
@@ -69,19 +69,8 @@ void PlayersMenu::show() const
 }
 bool PlayersMenu::doChoice(int choice)
 {
-	switch (choice) {
-	case 2:
-	case 3:
-	case 4:
-	case 5:
-	case 6:
-	case 7:
-	case 8:
-		cout << "Set Players count to " << choice << endl;
-		break;
-	default:
-		break;
-	}
+	if (choice >= 2 && choice <= 8)
+		Game::getInstance()->setPlayers(choice);
 	Game::getInstance()->setCurMenu(MenuID::MAIN_MENU);
 	return true;
 }
@@ -99,17 +88,8 @@ void LoadMenu::show() const
 }
 bool LoadMenu::doChoice(int choice)
 {
-	switch (choice) {
-	case 1:
-	case 2:
-	case 3:
-	case 4:
-	case 5:
-		cout << "Load Recording from  " << choice << endl;
-		break;
-	default:
-		break;
-	}
+	if (choice >= 1 && choice <= 5)
+		Game::getInstance()->loadFrom(choice);
 	Game::getInstance()->setCurMenu(MenuID::MAIN_MENU);
 	return true;
 }
@@ -127,17 +107,8 @@ void SaveMenu::show() const
 }
 bool SaveMenu::doChoice(int choice)
 {
-	switch (choice) {
-	case 1:
-	case 2:
-	case 3:
-	case 4:
-	case 5:
-		cout << "Save Recording to " << choice << endl;
-		break;
-	default:
-		break;
-	}
+	if (choice >= 1 && choice <= 5)
+		Game::getInstance()->saveTo(choice);
 	Game::getInstance()->setCurMenu(MenuID::MAIN_MENU);
 	return true;
 }
@@ -174,7 +145,8 @@ void VolumeMenu::show() const
 }
 bool VolumeMenu::doChoice(int choice)
 {
-	cout << "Set Volume = " << choice << endl;
+	if (choice >= 0 && choice <= 100)
+		Game::getInstance()->setVolume(choice);
 	Game::getInstance()->setCurMenu(MenuID::OPTION_MENU);
 	return true;
 }
@@ -189,19 +161,8 @@ void ResolutionMenu::show() const
 }
 bool ResolutionMenu::doChoice(int choice)
 {
-	switch (choice) {
-	case 1:
-		cout << "640x320" << endl;
-		break;
-	case 2:
-		cout << "800x600" << endl;
-		break;
-	case 3:
-		cout << "1024x768" << endl;
-		break;
-	default:
-		break;
-	}
+	if (choice >= 1 && choice <= 3)
+		Game::getInstance()->setResolution(choice);
 	Game::getInstance()->setCurMenu(MenuID::OPTION_MENU);
 	return true;
 }
