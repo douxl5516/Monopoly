@@ -1,6 +1,7 @@
 #include <iostream>
-#include "game.h"
-#include "menu.h"
+#include "Game.h"
+#include "Menu.h"
+#include "Menu.h"
 #include "MenuMgr.h"
 #include "MapDirector.h"
 #include "Map.h"

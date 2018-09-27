@@ -1,8 +1,8 @@
 #include <iostream>
 using namespace std;
 
-#include "menu.h"
-#include "game.h"
+#include "Menu.h"
+#include "Game.h"
 
 bool Menu::process()
 {

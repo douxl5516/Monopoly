@@ -7,4 +7,4 @@ project ("Monopoly")
 
 aux_source_directory(src DIR_SRCS)
 include_directories(src)
-add_executable(Monoply ${DIR_SRCS})
+add_executable(Monopoly ${DIR_SRCS})
