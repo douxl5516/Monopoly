@@ -1,18 +1,30 @@
+#include <iostream>
 #include "Map.h"
+#include "MapImp.h"
 #include "MapDirector.h"
 #include "Block.h"
+using namespace std;
 
-Map::Map(MapDirector & director)
+	
+Map::Map(MapImp * aImp):imp(aImp)
 {
-	block = director.buildMap();
 }
 
-void Map::create(MapDirector& director)
+Map::~Map()
 {
-	director.buildMap();
+	delete imp;
+}
+void Map::show() const
+{
+	imp->show();
 }
 
-void Map::show()
+void Map::addBlock(Block * block)
 {
-	block->show();
+	imp->addBlock(block);
+}
+
+Block * Map::getBlock(int index)
+{
+	return imp->getBlock(index);
 }

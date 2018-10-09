@@ -1,51 +1,78 @@
 #include "MenuFactory.h"
 #include "Menu.h"
+#include "Global.h"
 
-Menu * MenuFactory::create(int id)
+MenuFactory::MenuFactory()
 {
-	switch (id) {
-	case MenuID::MAIN_MENU:return createMainMenu();
-	case MenuID::PLAYERS_MENU:return createPlayersMenu();
-	case MenuID::LOAD_MENU:return createLoadMenu();
-	case MenuID::SAVE_MENU:return createSaveMenu();
-	case MenuID::OPTION_MENU:return createOptionMenu();
-	case MenuID::VOLUME_MENU:return createVolumeMenu();
-	case MenuID::RESOLUTION_MENU:return createResolutionMenu();
-	default:return nullptr;
+	//ctor
+}
+
+MenuFactory::~MenuFactory()
+{
+	//dtor
+}
+Menu* MenuFactory::createMenu(int menuID)
+{
+	if (menuID == MenuID::MAIN_MENU) {
+		return new MainMenu;
+	}
+	else if (menuID == MenuID::PLAYERS_MENU) {
+		return new PlayersMenu;
+	}
+	else if (menuID == MenuID::LOAD_MENU) {
+		return new LoadMenu;
+	}
+	else if (menuID == MenuID::SAVE_MENU) {
+		return new SaveMenu;
+	}
+	else if (menuID == MenuID::OPTION_MENU) {
+		return new OptionMenu;
+	}
+	else if (menuID == MenuID::VOLUME_MENU) {
+		return new VolumeMenu;
+	}
+	else if (menuID == MenuID::RESOLUTION_MENU) {
+		return new ResolutionMenu;
+	}
+	else {
+		return new MainMenu;
 	}
 }
+///-----------------------------------------
 
-Menu * MenuFactory::createMainMenu()
+MyMenuFactory::MyMenuFactory()
 {
-	return new MainMenu();
+	//ctor
 }
 
-Menu * MenuFactory::createPlayersMenu()
+MyMenuFactory::~MyMenuFactory()
 {
-	return new PlayersMenu();
+	//dtor
 }
-
-Menu * MenuFactory::createLoadMenu()
+Menu* MyMenuFactory::createMenu(int menuID)
 {
-	return new LoadMenu();
-}
-
-Menu * MenuFactory::createSaveMenu()
-{
-	return new SaveMenu();
-}
-
-Menu * MenuFactory::createOptionMenu()
-{
-	return new OptionMenu();
-}
-
-Menu * MenuFactory::createVolumeMenu()
-{
-	return new VolumeMenu();
-}
-
-Menu * MenuFactory::createResolutionMenu()
-{
-	return new ResolutionMenu();
+	if (menuID == MenuID::MAIN_MENU) {
+		return new MainMenu;
+	}
+	else if (menuID == MenuID::PLAYERS_MENU) {
+		return new PlayersMenu;
+	}
+	else if (menuID == MenuID::LOAD_MENU) {
+		return new LoadMenu;
+	}
+	else if (menuID == MenuID::SAVE_MENU) {
+		return new SaveMenu;
+	}
+	else if (menuID == MenuID::OPTION_MENU) {
+		return new OptionMenu;
+	}
+	else if (menuID == MenuID::VOLUME_MENU) {
+		return new VolumeMenu;
+	}
+	else if (menuID == MenuID::RESOLUTION_MENU) {
+		return new ResolutionMenu;
+	}
+	else {
+		return new MainMenu;
+	}
 }

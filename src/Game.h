@@ -10,18 +10,17 @@ public:
 	void run();
 	void term();
 	void play();
+	static Game* getInstance();
 public:
 	void setPlayers(int n);
 	void loadFrom(int n);
 	void saveTo(int n);
 	void setVolume(int n);
 	void setResolution(int n);
+	void createMap();
 	void setCurMenu(int menuID);
-	static Game* getInstance();
 private:
 	static Game* instance;
-	Map* curMap = nullptr;
-	Menu* curMenu = nullptr;
 	int players;
 	int volume;
 	int resolution;

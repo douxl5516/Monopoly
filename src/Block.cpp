@@ -2,99 +2,71 @@
 #include "Block.h"
 using namespace std;
 
-void BlockA::show()
+Block::Block(int i, int r, int c, int left, int right, int up, int down)
+	:index(i),row(r),col(c),left(left),right(right),up(up),down(down)
 {
-	cout << "A";
 }
 
-Block * BlockA::clone()
+Block::~Block()
 {
-	return new BlockA(*this);
 }
 
-void BlockB::show()
+void Block::setPosition(int r, int c)
 {
-	cout << "B";
+	row = r;
+	col = c;
 }
 
-Block * BlockB::clone()
+MoneyBlock::MoneyBlock(int i, int r, int c, int left, int right, int up, int down)
+	:Block(i,r,c,left,right,up,down)
 {
-	return new BlockB(*this);
 }
 
-void BlockC::show()
+MoneyBlock* MoneyBlock::clone()
 {
-	cout << "C";
+	return new MoneyBlock(*this);
+}
+TripBlock::TripBlock(int i, int r, int c, int left, int right, int up, int down) 
+	:Block(i, r, c, left, right, up, down)
+{
+}
+TripBlock* TripBlock::clone()
+{
+	return new TripBlock(*this);
+}
+BarBlock::BarBlock(int i, int r, int c, int left, int right, int up, int down) 
+	:Block(i, r, c, left, right, up, down)
+{
+}
+BarBlock* BarBlock::clone()
+{
+	return new BarBlock(*this);
+}
+SlideBlock::SlideBlock(int i, int r, int c, int left, int right, int up, int down) 
+	:Block(i, r, c, left, right, up, down)
+{
+}
+SlideBlock* SlideBlock::clone()
+{
+	return new SlideBlock(*this);
+}
+EBlock::EBlock(int i, int r, int c, int left, int right, int up, int down) 
+	:Block(i, r, c, left, right, up, down)
+{
+}
+EBlock* EBlock::clone()
+{
+	return new EBlock(*this);
 }
 
-Block * BlockC::clone()
+FBlock::FBlock(int i, int r, int c, int left, int right, int up, int down) 
+	:Block(i, r, c, left, right, up, down)
 {
-	return new BlockC(*this);
 }
 
-void BlockD::show()
+FBlock* FBlock::clone()
 {
-	cout << "D";
+	return new FBlock(*this);
 }
 
-Block * BlockD::clone()
-{
-	return new BlockD(*this);
-}
 
-void BlockE::show()
-{
-	cout << "E";
-}
-
-Block * BlockE::clone()
-{
-	return new BlockE(*this);
-}
-
-void BlockF::show()
-{
-	cout << "F";
-}
-
-Block * BlockF::clone()
-{
-	return new BlockF(*this);
-}
-
-void BlockBlank::show()
-{
-	cout << " ";
-}
-
-Block * BlockBlank::clone()
-{
-	return new BlockBlank(*this);
-}
-
-void Block::push(Block * content)
-{
-	contents.push_back(content);
-}
-
-void Block::show()
-{
-	for (auto item : contents) {
-		item->show();
-	}
-}
-
-Block * Block::clone()
-{
-	return new Block(*this);
-}
-
-void BlockBoundary::show()
-{
-	cout << endl;
-}
-
-Block * BlockBoundary::clone()
-{
-	return new BlockBoundary(*this);
-}

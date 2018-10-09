@@ -1,24 +1,23 @@
-#ifndef MENU_FACTORY
-#define MENU_FACTORY
-
+#ifndef MENU_FACTORY_H
+#define MENU_FACTORY_H
+#include "AbsMenuFactory.h"
 class Menu;
 
-class AbstractMenuFactory {
+class MenuFactory :public AbsMenuFactory
+{
 public:
-	virtual Menu* create(int id) = 0;
+	MenuFactory();
+	virtual ~MenuFactory();
+	virtual Menu * createMenu(int menuID);
 };
 
-class MenuFactory :public AbstractMenuFactory {
+class MyMenuFactory :public AbsMenuFactory
+{
 public:
-	virtual Menu* create(int id);
-protected:
-	virtual Menu* createMainMenu();
-	virtual Menu* createPlayersMenu();
-	virtual Menu* createLoadMenu();
-	virtual Menu* createSaveMenu();
-	virtual Menu* createOptionMenu();
-	virtual Menu* createVolumeMenu();
-	virtual Menu* createResolutionMenu();
+	MyMenuFactory();
+	virtual ~MyMenuFactory();
+	virtual Menu * createMenu(int menuID);
 };
 
-#endif // !MENU_FACTORY
+
+#endif // !MENU_FACTORY_H

@@ -2,68 +2,84 @@
 #define BLOCK_H
 #include <vector>
 
-class BlockID {
-public:
-	static const int BLOCK_BLANK = 0;
-	static const int BLOCK_A = 1;
-	static const int BLOCK_B = 2;
-	static const int BLOCK_C = 3;
-	static const int BLOCK_D = 4;
-	static const int BLOCK_E = 5;
-	static const int BLOCK_F = 6;
-	static const int BLOCK_BOUNDERY = 7;
-
-	static const int BLOCK_COUNT = 8;
-};
-
 class Block
 {
+public:
+	Block() {}
+	Block(int i,int r,int c,int left,int right,int up,int down);
+	virtual ~Block();
+	virtual const char* name() const = 0;
+	virtual Block * clone() = 0;
+	void setPosition(int r, int c);
+	int getRow() const { return row; }
+	int getCol() const { return col; }
+	int getIndex() const { return index; }
+	int getUp() const { return up; }
+	int getRight() const { return right; }
+	int getDown()const { return down; }
+	int getLeft() const { return left; }
 protected:
-	std::vector<Block*> contents;
-public:
-	virtual void push(Block* content);
-	virtual void show();
-	virtual Block* clone();
+	int index;
+	int row;
+	int col;
+	int up,right,down,left;
 };
-class BlockA :public Block {
+
+class MoneyBlock : public Block
+{
 public:
-	virtual void show();
-	virtual Block* clone();
+	MoneyBlock() {}
+	MoneyBlock(int i, int r, int c, int left, int right, int up, int down);
+	virtual ~MoneyBlock() {}
+	virtual const char* name() const { return "A"; }
+	virtual MoneyBlock * clone() override;
 };
-class BlockB :public Block {
+class TripBlock : public Block
+{
 public:
-	virtual void show();
-	virtual Block* clone();
+	TripBlock() {}
+	TripBlock(int i, int r, int c, int left, int right, int up, int down);
+	virtual ~TripBlock() {}
+	virtual const char* name() const { return "B"; }
+	virtual TripBlock * clone() override;
 };
-class BlockC :public Block {
+class BarBlock : public Block
+{
 public:
-	virtual void show();
-	virtual Block* clone();
+	BarBlock() {}
+	BarBlock(int i, int r, int c, int left, int right, int up, int down);
+	virtual ~BarBlock() {}
+	virtual const char* name() const { return "C"; }
+	virtual BarBlock * clone() override;
 };
-class BlockD :public Block {
+class SlideBlock : public Block
+{
 public:
-	virtual void show();
-	virtual Block* clone();
+	SlideBlock() {}
+	SlideBlock(int i, int r, int c, int left, int right, int up, int down);
+	virtual ~SlideBlock() {}
+	virtual const char* name() const { return "D"; }
+	virtual SlideBlock * clone() override;
 };
-class BlockE :public Block {
+
+class EBlock : public Block
+{
 public:
-	virtual void show();
-	virtual Block* clone();
+	EBlock() {}
+	EBlock(int i, int r, int c, int left, int right, int up, int down);
+	virtual ~EBlock() {}
+	virtual const char* name() const { return "E"; }
+	virtual EBlock * clone() override;
 };
-class BlockF :public Block {
+
+class FBlock : public Block
+{
 public:
-	virtual void show();
-	virtual Block* clone();
-};
-class BlockBlank :public Block {
-public:
-	virtual void show();
-	virtual Block* clone();
-};
-class BlockBoundary :public Block {
-public:
-	virtual void show();
-	virtual Block* clone();
+	FBlock(){}
+	FBlock(int i, int r, int c, int left, int right, int up, int down);
+	virtual ~FBlock() {}
+	virtual const char* name() const { return "F"; }
+	virtual FBlock * clone() override;
 };
 
 #endif // !BLOCK_H

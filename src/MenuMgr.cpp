@@ -1,10 +1,16 @@
 #include "MenuMgr.h"
+#include "Global.h"
 
 MenuMgr* MenuMgr::instance = nullptr;
+Menu* MenuMgr::curMenu = nullptr;
 
 MenuMgr::~MenuMgr()
 {
 	release();
+	for (int i = 0; i < MenuID::MENU_COUNT; i++) {
+		delete menus[i];
+		menus[i] = nullptr;
+	}
 }
 
 MenuMgr* MenuMgr::getInstance() {
@@ -13,11 +19,9 @@ MenuMgr* MenuMgr::getInstance() {
 	return instance;
 }
 
-Menu * MenuMgr::getMenuInstance(int menuID)
+Menu * MenuMgr::getCurMenu()
 {
-	if (menuID <= MenuID::MENU_COUNT&&menuID >= 0)
-		return menus[menuID];
-	return nullptr;
+	return curMenu;
 }
 
 void MenuMgr::release()
@@ -26,28 +30,26 @@ void MenuMgr::release()
 		delete instance;
 		instance = nullptr;
 	}
-
-	for (int i = 0; i < MenuID::MENU_COUNT; i++) {
-		if (menus[i] == nullptr)
-			continue;
-		delete menus[i];
-		menus[i] = nullptr;
-	}
-
-	if (fac != nullptr) {
-		delete fac;
-		fac = nullptr;
-	}
 }
 
-AbstractMenuFactory* MenuMgr::fac = new MenuFactory();
+void MenuMgr::setMenuFactory(AbsMenuFactory * pfac)
+{
+	delete fac;
+	fac = pfac;
+}
 
-Menu* MenuMgr::menus[] = {
-	fac->create(MenuID::MAIN_MENU),
-	fac->create(MenuID::PLAYERS_MENU),
-	fac->create(MenuID::LOAD_MENU),
-	fac->create(MenuID::SAVE_MENU),
-	fac->create(MenuID::OPTION_MENU),
-	fac->create(MenuID::VOLUME_MENU),
-	fac->create(MenuID::RESOLUTION_MENU),
-};
+Menu * MenuMgr::getMenu(int menuID)
+{
+	if (menuID < MenuID::MAIN_MENU || menuID >= MenuID::MENU_COUNT) {
+		menuID = MenuID::MAIN_MENU;
+	}
+	if (menus[menuID] == nullptr) {
+		menus[menuID] = fac->createMenu(menuID);
+	}
+	return menus[menuID];
+}
+
+void MenuMgr::setCurMenu(int menuID)
+{
+	curMenu = getMenu(menuID);
+}

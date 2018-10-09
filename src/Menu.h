@@ -1,20 +1,6 @@
 #ifndef MENU_H
 #define MENU_H
 
-class MenuID
-{
-public:
-	static const int MAIN_MENU = 0;
-	static const int PLAYERS_MENU = 1;
-	static const int LOAD_MENU = 2;
-	static const int SAVE_MENU = 3;
-	static const int OPTION_MENU = 4;
-	static const int VOLUME_MENU = 5;
-	static const int RESOLUTION_MENU = 6;
-
-	static const int MENU_COUNT = 7;
-};
-
 class Game;
 class Menu
 {

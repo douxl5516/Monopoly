@@ -1,10 +1,11 @@
 #include <iostream>
+
+#include "Global.h"
 #include "Game.h"
 #include "Menu.h"
-#include "Menu.h"
 #include "MenuMgr.h"
-#include "MapDirector.h"
 #include "Map.h"
+#include "MapMgr.h"
 
 using namespace std;
 
@@ -12,14 +13,16 @@ Game* Game::instance = nullptr;
 
 void Game::init()
 {
-	setCurMenu(MenuID::MAIN_MENU);
+	MenuMgr::getInstance()->setMenuFactory(new MenuFactory);
+	MenuMgr::getInstance()->setCurMenu(MenuID::MAIN_MENU);
+	createMap();
 	players = 2;
 	volume = 50;
 	resolution = 1;
 }
 void Game::run()
 {
-	while (curMenu->process());
+	while (MenuMgr::getCurMenu()->process());
 }
 void Game::term()
 {
@@ -27,10 +30,7 @@ void Game::term()
 }
 void Game::play()
 {
-	MapDirector* mapDirector = new MapDirectorA();
-	curMap = new Map(*mapDirector);
-	delete mapDirector;
-	curMap->show();
+	MapMgr::getCurMap()->show();
 }
 void Game::setPlayers(int n)
 {
@@ -69,9 +69,14 @@ void Game::setResolution(int n)
 		break;
 	}
 }
+void Game::createMap()
+{
+	MapMgr::getInstance()->createMap();
+}
+
 void Game::setCurMenu(int menuID)
 {
-	curMenu = MenuMgr::getInstance()->getMenuInstance(menuID);
+	MenuMgr::getInstance()->setCurMenu(menuID);
 }
 
 Game * Game::getInstance()

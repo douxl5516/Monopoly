@@ -3,6 +3,7 @@ using namespace std;
 
 #include "Menu.h"
 #include "Game.h"
+#include "Global.h"
 
 bool Menu::process()
 {

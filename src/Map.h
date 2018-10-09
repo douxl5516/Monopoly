@@ -1,17 +1,19 @@
 #ifndef MAP_H
 #define MAP_H
-#include <vector>
+#include "Global.h"
 
 class Block;
-class MapDirector;
+class MapImp;
 class Map
 {
-private:
-	Block* block;
 public:
-	Map(MapDirector& director);
-	void create(MapDirector& director);
-	void show();
+	Map(MapImp* aImp);
+	virtual ~Map();
+	void show() const;
+	void addBlock(Block * block);
+	Block * getBlock(int index);
+protected:
+	MapImp* imp;
 };
 
 #endif // !MAP_H
