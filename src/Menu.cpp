@@ -1,14 +1,24 @@
 #include <iostream>
+#include<windows.h>
+#include<Mmsystem.h>
+#pragma comment(lib,"winmm.lib")
 using namespace std;
 
 #include "Menu.h"
 #include "Game.h"
 #include "Global.h"
+#include "BlockMgr.h"
+#include "Block.h"
+#include "MapMgr.h"
+#include "OutDevice.h"
+#include "Map.h"
 
 bool Menu::process()
 {
-	show();
+	OutDevice* p=new StreamDeviceTabDecorator(new StreamDevice);
+	show(p);
 	int choice = getChoice();
+	delete p;
 	return doChoice(choice);
 }
 int  Menu::getChoice() const
@@ -18,16 +28,16 @@ int  Menu::getChoice() const
 	return choice;
 }
 ///-----------------------------------------
-void MainMenu::show() const
+void MainMenu::show(OutDevice* out) const
 {
-	cout << "\n\t" << "主菜单" << endl;
-	cout << "1: New" << endl;
-	cout << "2: Load" << endl;
-	cout << "3: Save" << endl;
-	cout << "4: Option" << endl;
-	cout << "5: Play..." << endl;
-	cout << "0: Exit" << endl;
-	cout << " Your selected:";
+	out->drawLn("\n\t主菜单");
+	out->drawLn( "1: New" );
+	out->drawLn( "2: Load" );
+	out->drawLn( "3: Option" );
+	out->drawLn( "4: Play..." );
+	out->drawLn( "5: Change To EF" );
+	out->drawLn( "0: Exit" );
+	out->draw( " Your selected:");
 }
 
 bool MainMenu::doChoice(int choice)
@@ -40,13 +50,16 @@ bool MainMenu::doChoice(int choice)
 		Game::getInstance()->setCurMenu(MenuID::LOAD_MENU);
 		break;
 	case 3:
-		Game::getInstance()->setCurMenu(MenuID::SAVE_MENU);
-		break;
-	case 4:
 		Game::getInstance()->setCurMenu(MenuID::OPTION_MENU);
 		break;
-	case 5:
+	case 4:
 		Game::getInstance()->play();
+		break;
+	case 5:
+		BlockMgr::getInstance()->setPrototype(BlockID::MONEY_BLOCK, new EBlock);
+		BlockMgr::getInstance()->setPrototype(BlockID::BAR_BLOCK, new FBlock);
+		///Game::getGame()->createMap();
+		MapMgr::getInstance()->createMap();
 		break;
 	default:
 		return false;
@@ -55,18 +68,18 @@ bool MainMenu::doChoice(int choice)
 }
 
 ///------玩家人数菜单--------------------------------
-void PlayersMenu::show() const
+void PlayersMenu::show(OutDevice* out) const
 {
-	cout << "\n\tSet number of players(2-8):" << endl;
-	cout << "2. 2" << endl;
-	cout << "3. 3" << endl;
-	cout << "4. 4" << endl;
-	cout << "5. 5" << endl;
-	cout << "6. 6" << endl;
-	cout << "7. 7" << endl;
-	cout << "8. 8" << endl;
-	cout << "0. Back" << endl;
-	cout << " Your selected:";
+	out->drawLn( "\n\tSet number of players(2-8):" );
+	out->drawLn( "2. 2" );
+	out->drawLn( "3. 3" );
+	out->drawLn( "4. 4" );
+	out->drawLn( "5. 5" );
+	out->drawLn( "6. 6" );
+	out->drawLn( "7. 7" );
+	out->drawLn( "8. 8" );
+	out->drawLn( "0. Back" );
+	out->draw( " Your selected:");
 }
 bool PlayersMenu::doChoice(int choice)
 {
@@ -76,37 +89,38 @@ bool PlayersMenu::doChoice(int choice)
 	return true;
 }
 ///-------载入菜单----------------------------------
-void LoadMenu::show() const
+void LoadRecordMenu::show(OutDevice* out) const
 {
-	cout << "\n\tSelect the Record to be loaded(1-5):" << endl;
-	cout << "1. 1" << endl;
-	cout << "2. 2" << endl;
-	cout << "3. 3" << endl;
-	cout << "4. 4" << endl;
-	cout << "5. 5" << endl;
-	cout << "0. Back" << endl;
-	cout << " Your selected:";
+	out->drawLn( "\n\tSelect the Record to be loaded(1-5):" );
+	out->drawLn( "1. 1" );
+	out->drawLn( "2. 2" );
+	out->drawLn( "3. 3" );
+	out->drawLn( "4. 4" );
+	out->drawLn( "5. 5" );
+	out->drawLn( "0. Back" );
+	out->draw( " Your selected:");
 }
-bool LoadMenu::doChoice(int choice)
+bool LoadRecordMenu::doChoice(int choice)
 {
 	if (choice >= 1 && choice <= 5)
 		Game::getInstance()->loadFrom(choice);
 	Game::getInstance()->setCurMenu(MenuID::MAIN_MENU);
+	Game::getInstance()->play();
 	return true;
 }
 ///-------保存菜单----------------------------------
-void SaveMenu::show() const
+void SaveRecordMenu::show(OutDevice* out) const
 {
-	cout << "\n\tSelect the Record to save(1-5):" << endl;
-	cout << "1. 1" << endl;
-	cout << "2. 2" << endl;
-	cout << "3. 3" << endl;
-	cout << "4. 4" << endl;
-	cout << "5. 5" << endl;
-	cout << "0. Back" << endl;
-	cout << " Your selected:";
+	out->drawLn( "\n\tSelect the Record to save(1-5):" );
+	out->drawLn( "1. 1" );
+	out->drawLn( "2. 2" );
+	out->drawLn( "3. 3" );
+	out->drawLn( "4. 4" );
+	out->drawLn( "5. 5" );
+	out->drawLn( "0. Back" );
+	out->draw( " Your selected:");
 }
-bool SaveMenu::doChoice(int choice)
+bool SaveRecordMenu::doChoice(int choice)
 {
 	if (choice >= 1 && choice <= 5)
 		Game::getInstance()->saveTo(choice);
@@ -115,13 +129,13 @@ bool SaveMenu::doChoice(int choice)
 }
 
 ///-------选项菜单----------------------------------
-void OptionMenu::show() const
+void OptionMenu::show(OutDevice* out) const
 {
-	cout << "\n\tSet options :" << endl;
-	cout << "1.Set the value of Volume(0-100)" << endl;
-	cout << "2.Set the resolution" << endl;
-	cout << "0. Back" << endl;
-	cout << " Your selected:";
+	out->drawLn( "\n\tSet options :" );
+	out->drawLn( "1.Set the value of Volume(0-100)" );
+	out->drawLn( "2.Set the resolution" );
+	out->drawLn( "0. Back" );
+	out->draw( " Your selected:");
 }
 bool OptionMenu::doChoice(int choice)
 {
@@ -139,10 +153,10 @@ bool OptionMenu::doChoice(int choice)
 	return true;
 }
 ///-------音量选项菜单----------------------------------
-void VolumeMenu::show() const
+void VolumeMenu::show(OutDevice* out) const
 {
-	cout << "\n\tSet Volume" << endl;
-	cout << "input value(0-100)：";
+	out->drawLn( "\n\tSet Volume" );
+	out->draw( "input value(0-100)：");
 }
 bool VolumeMenu::doChoice(int choice)
 {
@@ -152,13 +166,13 @@ bool VolumeMenu::doChoice(int choice)
 	return true;
 }
 ///-------分辨率选项菜单----------------------------------
-void ResolutionMenu::show() const
+void ResolutionMenu::show(OutDevice* out) const
 {
-	cout << "\n\tSet resolution" << endl;
-	cout << "1. 640X320" << endl;
-	cout << "2. 800X600" << endl;
-	cout << "3. 1024X768" << endl;
-	cout << " Your selected:";
+	out->drawLn( "\n\tSet resolution" );
+	out->drawLn( "1. 640X320" );
+	out->drawLn( "2. 800X600" );
+	out->drawLn( "3. 1024X768" );
+	out->draw( " Your selected:" );
 }
 bool ResolutionMenu::doChoice(int choice)
 {
@@ -166,5 +180,81 @@ bool ResolutionMenu::doChoice(int choice)
 		Game::getInstance()->setResolution(choice);
 	Game::getInstance()->setCurMenu(MenuID::OPTION_MENU);
 	return true;
+}
+///-------游戏菜单----------------------------------------
+void PlayMenu::show(OutDevice * out) const
+{
+	out->drawLn("\n\tPlayMenu");
+	out->drawLn("1. GO...");
+	out->drawLn("2. Load");
+	out->drawLn("3. Save");
+	out->drawLn("4. Back To MainMenu");
+	out->draw(" Your selected:");
+}
+
+bool PlayMenu::doChoice(int choice)
+{
+	switch (choice) {
+	case 1:
+		MapMgr::getCurMap()->show();
+		break;
+	case 2:
+		Game::getInstance()->setCurMenu(MenuID::LOAD_MENU);
+		break;
+	case 3:
+		Game::getInstance()->setCurMenu(MenuID::SAVE_MENU);
+		break;
+	case 4:
+		Game::getInstance()->setCurMenu(MenuID::MAIN_MENU);
+		break;
+	}
+	return true;
+}
+
+
+MenuDecorator::~MenuDecorator()
+{
+	delete menu;
+}
+
+MenuDecorator::MenuDecorator(Menu * p):menu(p)
+{
+}
+
+bool MenuDecorator::process()
+{
+	return menu->process();
+}
+
+void MenuDecorator::show(OutDevice * out) const
+{
+	menu->show(out);
+}
+
+bool MenuDecorator::doChoice(int choice)
+{
+	return menu->doChoice(choice);
+}
+
+MusicMenuDecorator::MusicMenuDecorator(Menu * p):MenuDecorator(p)
+{
+}
+
+bool MusicMenuDecorator::process()
+{
+	playMusic();
+	bool res= MenuDecorator::process();
+	closeMusic();
+	return res;
+}
+
+void MusicMenuDecorator::playMusic()
+{
+	PlaySound(TEXT("浮世寻.wav"), NULL, SND_FILENAME | SND_ASYNC);
+}
+
+void MusicMenuDecorator::closeMusic()
+{
+	PlaySound(NULL, NULL, SND_FILENAME);
 }
 

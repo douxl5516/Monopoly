@@ -13,7 +13,7 @@ private:
 private:
 	BlockMgr();
 	BlockMgr(const BlockMgr&);
-	BlockMgr& operator=(const BlockMgr&);
+	BlockMgr& operator=(const BlockMgr&) = delete;
 public:
 	virtual ~BlockMgr();
 	virtual Block* cloneBlock(int blockID);

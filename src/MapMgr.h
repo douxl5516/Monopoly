@@ -8,7 +8,7 @@ public:
 private:
 	MapMgr() {}
 	MapMgr(const MapMgr&) {}
-	MapMgr& operator=(const MapMgr&) {}
+	MapMgr& operator=(const MapMgr&) = delete;
 public:
 	~MapMgr();
 	static MapMgr* getInstance();

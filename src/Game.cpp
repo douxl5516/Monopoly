@@ -6,6 +6,8 @@
 #include "MenuMgr.h"
 #include "Map.h"
 #include "MapMgr.h"
+#include "BlockMgr.h"
+#include "Player.h"
 
 using namespace std;
 
@@ -15,10 +17,15 @@ void Game::init()
 {
 	MenuMgr::getInstance()->setMenuFactory(new MenuFactory);
 	MenuMgr::getInstance()->setCurMenu(MenuID::MAIN_MENU);
-	createMap();
-	players = 2;
+	MapMgr::getInstance()->createMap();
+	players = 3;
 	volume = 50;
 	resolution = 1;
+	playerList.push_back(new HumanPlayer);
+	playerList.push_back(new AutoPlayer);
+	playerList.push_back(new AutoPlayer);
+	playerIdx = 0;
+	curPlayer = playerList[playerIdx];
 }
 void Game::run()
 {
@@ -27,10 +34,20 @@ void Game::run()
 void Game::term()
 {
 	MenuMgr::release();
+	MapMgr::release();
+	BlockMgr::release();
+	for (int i = 0; i < playerList.size(); i++) {
+		delete playerList[i];
+	}
 }
 void Game::play()
 {
-	MapMgr::getCurMap()->show();
+	bool running = true;
+	while (running) {
+		running = curPlayer->play();
+		playerIdx = (playerIdx+1) % 3;
+		curPlayer = playerList[playerIdx];
+	}
 }
 void Game::setPlayers(int n)
 {
@@ -69,10 +86,6 @@ void Game::setResolution(int n)
 		break;
 	}
 }
-void Game::createMap()
-{
-	MapMgr::getInstance()->createMap();
-}
 
 void Game::setCurMenu(int menuID)
 {
@@ -84,4 +97,9 @@ Game * Game::getInstance()
 	if (instance == nullptr)
 		instance = new Game;
 	return instance;
+}
+
+void Game::release()
+{
+	delete instance;
 }

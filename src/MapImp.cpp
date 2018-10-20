@@ -1,6 +1,7 @@
 #include "MapImp.h"
 #include "Block.h"
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 MapImp::MapImp()
@@ -13,6 +14,37 @@ MapImp::~MapImp()
 		delete[] p;
 	}
 	blocks.clear();
+}
+
+void MapImp::show() const
+{
+	vector<Block*> temps(blocks);
+	sort(temps.begin(), temps.end(), [](Block * b1, Block * b2) {
+		if (b1->getRow() == b2->getRow()) {
+			return b1->getCol() < b2->getCol();
+		}
+		else {
+			return b1->getRow() < b2->getRow();
+		}
+	});
+
+	int row = 0;
+	int col = 0;
+	for (Block* block : temps) {
+		int r = block->getRow();
+		int c = block->getCol();
+		for (int i = row; i < r; ++i) {
+			cout << endl;
+			col = 0;
+		}
+		for (int i = col; i < c; ++i) {
+			cout << "  ";
+		}
+		cout << block->name() << " ";
+		row = r;
+		col = c + 1;
+	}
+	cout << endl;
 }
 
 void MapImp::addBlock(Block *block)

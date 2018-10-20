@@ -9,20 +9,20 @@ class MenuMgr {
 private:
 	MenuMgr() {}
 	MenuMgr(const MenuMgr&) {}
-	MenuMgr& operator=(const MenuMgr&) {}
+	MenuMgr& operator=(const MenuMgr&) = delete;
 public:
 	~MenuMgr();
 	static MenuMgr* getInstance();
-	static Menu* getCurMenu();//1
+	static Menu* getCurMenu();
 	static void release();
 private:
 	Menu* getMenu(int menuID);
 public:
 	void setMenuFactory(AbsMenuFactory* pfac);
-	void setCurMenu(int menuID);//2
+	void setCurMenu(int menuID);
 private:
 	static MenuMgr* instance;
-	static Menu* curMenu;//3,就加这三处，严格来说不算是单例模式
+	static Menu* curMenu;
 	Menu* menus[MenuID::MENU_COUNT];
 	AbsMenuFactory* fac;
 };

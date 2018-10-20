@@ -14,16 +14,16 @@ MenuFactory::~MenuFactory()
 Menu* MenuFactory::createMenu(int menuID)
 {
 	if (menuID == MenuID::MAIN_MENU) {
-		return new MainMenu;
+		return new MusicMenuDecorator(new MainMenu);
 	}
 	else if (menuID == MenuID::PLAYERS_MENU) {
 		return new PlayersMenu;
 	}
 	else if (menuID == MenuID::LOAD_MENU) {
-		return new LoadMenu;
+		return new LoadRecordMenu;
 	}
 	else if (menuID == MenuID::SAVE_MENU) {
-		return new SaveMenu;
+		return new SaveRecordMenu;
 	}
 	else if (menuID == MenuID::OPTION_MENU) {
 		return new OptionMenu;
@@ -33,6 +33,9 @@ Menu* MenuFactory::createMenu(int menuID)
 	}
 	else if (menuID == MenuID::RESOLUTION_MENU) {
 		return new ResolutionMenu;
+	}
+	else if (menuID==MenuID::PLAY_MENU) {
+		return new PlayMenu;
 	}
 	else {
 		return new MainMenu;
@@ -58,10 +61,10 @@ Menu* MyMenuFactory::createMenu(int menuID)
 		return new PlayersMenu;
 	}
 	else if (menuID == MenuID::LOAD_MENU) {
-		return new LoadMenu;
+		return new LoadRecordMenu;
 	}
 	else if (menuID == MenuID::SAVE_MENU) {
-		return new SaveMenu;
+		return new SaveRecordMenu;
 	}
 	else if (menuID == MenuID::OPTION_MENU) {
 		return new OptionMenu;

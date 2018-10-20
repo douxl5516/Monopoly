@@ -8,7 +8,7 @@ class MapImp
 public:
 	MapImp();
 	virtual ~MapImp();
-	virtual void show() const = 0;
+	virtual void show() const;
 	virtual void addBlock(Block*);
 	virtual Block* getBlock(int index);
 protected:

@@ -13,8 +13,25 @@ public:
 	Map * getMap();
 protected:
 	MapBuilder* builder = nullptr;
-	Map * aMap = nullptr;
+	Map *  aMap = nullptr;
+private:
 };
 
+
+class SunMapDirector :public MapDirector
+{
+public:
+	SunMapDirector(MapBuilder* aBuidler);
+	virtual ~SunMapDirector() {}
+	virtual void makeMap();
+};
+
+class LinkedMapDirector :public MapDirector
+{
+public:
+	LinkedMapDirector(MapBuilder* aBuidler);
+	virtual ~LinkedMapDirector() {}
+	virtual void makeMap();
+};
 
 #endif // MAP_DIRECTOR_H

@@ -2,14 +2,14 @@
 #define MENU_H
 
 class Game;
+class OutDevice;
 class Menu
 {
 public:
 	Menu() {}
 	virtual ~Menu() {}
-	bool process();
-protected:
-	virtual void show() const = 0;
+	virtual bool process();
+	virtual void show(OutDevice* out) const = 0;
 	virtual int  getChoice() const;
 	virtual bool doChoice(int choice) = 0;
 };
@@ -17,49 +17,76 @@ protected:
 class MainMenu : public Menu
 {
 protected:
-	virtual void show() const;
+	virtual void show(OutDevice* out) const;
 	virtual bool doChoice(int choice);
 };
 ///------玩家人数菜单--------------------------------
 class PlayersMenu : public Menu
 {
 protected:
-	virtual void show() const;
+	virtual void show(OutDevice* out) const;
 	virtual bool doChoice(int choice);
 };
 ///-------载入菜单----------------------------------
-class LoadMenu : public Menu
+class LoadRecordMenu : public Menu
 {
 protected:
-	virtual void show() const;
+	virtual void show(OutDevice* out) const;
 	virtual bool doChoice(int choice);
 };
 ///-------保存菜单----------------------------------
-class SaveMenu : public Menu
+class SaveRecordMenu : public Menu
 {
 protected:
-	virtual void show() const;
+	virtual void show(OutDevice* out) const;
 	virtual bool doChoice(int choice);
 };
 ///-------选项菜单----------------------------------
 class OptionMenu : public Menu
 {
 protected:
-	virtual void show() const;
+	virtual void show(OutDevice* out) const;
 	virtual bool doChoice(int choice);
 };
 ///-------音量选项菜单----------------------------------
 class VolumeMenu : public Menu
 {
 protected:
-	virtual void show() const;
+	virtual void show(OutDevice* out) const;
 	virtual bool doChoice(int choice);
 };
 ///-------分辨率选项菜单----------------------------------
 class ResolutionMenu : public Menu
 {
 protected:
-	virtual void show() const;
+	virtual void show(OutDevice* out) const;
 	virtual bool doChoice(int choice);
+};
+///-------游戏菜单----------------------------------------
+class PlayMenu :public Menu {
+protected:
+	virtual void show(OutDevice* out) const;
+	virtual bool doChoice(int choice);
+};
+
+
+class MenuDecorator :public Menu{
+public:
+	~MenuDecorator();
+	MenuDecorator(Menu* p);
+	Menu* menu;
+
+	virtual bool process();
+	virtual void show(OutDevice* out) const;
+	virtual bool doChoice(int choice);
+};
+
+class MusicMenuDecorator :public MenuDecorator {
+public:
+	MusicMenuDecorator(Menu* p);
+	virtual bool process();
+protected:
+	void playMusic();
+	void closeMusic();
 };
 #endif // MENU_H

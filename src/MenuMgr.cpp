@@ -6,7 +6,6 @@ Menu* MenuMgr::curMenu = nullptr;
 
 MenuMgr::~MenuMgr()
 {
-	release();
 	for (int i = 0; i < MenuID::MENU_COUNT; i++) {
 		delete menus[i];
 		menus[i] = nullptr;
@@ -25,7 +24,7 @@ Menu * MenuMgr::getCurMenu()
 }
 
 void MenuMgr::release()
-{
+{	
 	if (instance != nullptr) {
 		delete instance;
 		instance = nullptr;

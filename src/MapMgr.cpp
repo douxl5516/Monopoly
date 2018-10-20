@@ -7,7 +7,6 @@ Map* MapMgr::curMap = nullptr;
 
 MapMgr::~MapMgr()
 {
-	release();
 }
 
 MapMgr * MapMgr::getInstance()
