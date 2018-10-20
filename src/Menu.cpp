@@ -197,7 +197,7 @@ bool PlayMenu::doChoice(int choice)
 	switch (choice) {
 	case 1:
 		MapMgr::getCurMap()->show();
-		break;
+		return true;
 	case 2:
 		Game::getInstance()->setCurMenu(MenuID::LOAD_MENU);
 		break;
@@ -208,7 +208,7 @@ bool PlayMenu::doChoice(int choice)
 		Game::getInstance()->setCurMenu(MenuID::MAIN_MENU);
 		break;
 	}
-	return true;
+	return false;
 }
 
 

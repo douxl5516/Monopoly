@@ -8,6 +8,7 @@
 #include "MapMgr.h"
 #include "BlockMgr.h"
 #include "Player.h"
+#include "PlayerMgr.h"
 
 using namespace std;
 
@@ -21,11 +22,6 @@ void Game::init()
 	players = 3;
 	volume = 50;
 	resolution = 1;
-	playerList.push_back(new HumanPlayer);
-	playerList.push_back(new AutoPlayer);
-	playerList.push_back(new AutoPlayer);
-	playerIdx = 0;
-	curPlayer = playerList[playerIdx];
 }
 void Game::run()
 {
@@ -36,18 +32,11 @@ void Game::term()
 	MenuMgr::release();
 	MapMgr::release();
 	BlockMgr::release();
-	for (int i = 0; i < playerList.size(); i++) {
-		delete playerList[i];
-	}
 }
 void Game::play()
 {
 	bool running = true;
-	while (running) {
-		running = curPlayer->play();
-		playerIdx = (playerIdx+1) % 3;
-		curPlayer = playerList[playerIdx];
-	}
+	while (PlayerMgr::getInstance()->Do());
 }
 void Game::setPlayers(int n)
 {

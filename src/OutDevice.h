@@ -21,7 +21,7 @@ public:
 	virtual void drawLn(const char* pstr);
 };
 
-class PrinterDeviceProxy :public OutDevice {
+class PrinterDeviceProxy :public PrinterDevice {
 public:
 	virtual void draw(const char* pstr);
 	virtual void drawLn(const char* pstr);
