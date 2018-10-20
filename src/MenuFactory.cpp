@@ -14,7 +14,7 @@ MenuFactory::~MenuFactory()
 Menu* MenuFactory::createMenu(int menuID)
 {
 	if (menuID == MenuID::MAIN_MENU) {
-		return new MusicMenuDecorator(new MainMenu);
+		return new HeaderDecorator(new MusicMenuDecorator(new MainMenu));
 	}
 	else if (menuID == MenuID::PLAYERS_MENU) {
 		return new PlayersMenu;

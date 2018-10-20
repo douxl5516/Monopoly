@@ -81,6 +81,16 @@ public:
 	virtual bool doChoice(int choice);
 };
 
+
+class HeaderDecorator :public MenuDecorator {
+public:
+	HeaderDecorator(Menu* p);
+	virtual bool process();
+protected:
+	void drawHeader();
+};
+
+
 class MusicMenuDecorator :public MenuDecorator {
 public:
 	MusicMenuDecorator(Menu* p);

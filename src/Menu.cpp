@@ -258,3 +258,19 @@ void MusicMenuDecorator::closeMusic()
 	PlaySound(NULL, NULL, SND_FILENAME);
 }
 
+HeaderDecorator::HeaderDecorator(Menu * p) :MenuDecorator(p)
+{
+}
+
+bool HeaderDecorator::process()
+{
+	drawHeader();
+	return MenuDecorator::process();
+}
+
+void HeaderDecorator::drawHeader()
+{
+	cout << "=========================" << endl;
+	cout << "=                       =" << endl;
+	cout << "=========================" << endl;
+}
