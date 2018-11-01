@@ -1,54 +1,64 @@
-#include "MenuMgr.h"
-#include "Global.h"
+///======================================================================
+///  Project:   Richer02
+/// FileName:	menumgr.cpp
+///     Desc:   Richer 02
+///   Author:	Chen Wei
+///======================================================================
+#include "global.h"
+#include "menumgr.h"
+#include "menu.h"
+#include "menufactory.h"
 
-MenuMgr* MenuMgr::instance = nullptr;
-Menu* MenuMgr::curMenu = nullptr;
+
+MenuMgr* MenuMgr::mgr = nullptr;
+MenuMgr* MenuMgr::getMgr()
+{
+    if(mgr == nullptr) {
+        mgr = new MenuMgr;
+    }
+    return mgr;
+}
+void  MenuMgr::releaseMgr()
+{
+    delete mgr;
+    mgr = nullptr;
+}
+
+MenuMgr::MenuMgr()
+{
+    //ctor
+    for(int i = MenuID::MAIN_MENU; i < MenuID::MENU_COUNT; ++i) {
+        menus[i] = nullptr;
+    }
+}
 
 MenuMgr::~MenuMgr()
 {
-	for (int i = 0; i < MenuID::MENU_COUNT; i++) {
-		delete menus[i];
-		menus[i] = nullptr;
-	}
+    //dtor
+    for(int i = MenuID::MAIN_MENU; i < MenuID::MENU_COUNT; ++i) {
+        delete menus[i];
+        menus[i] = nullptr;
+    }
+    delete fac;
 }
-
-MenuMgr* MenuMgr::getInstance() {
-	if (instance == nullptr)
-		instance = new MenuMgr;
-	return instance;
-}
-
-Menu * MenuMgr::getCurMenu()
+void MenuMgr::setMenuFactory(AbsMenuFactory* pFac)
 {
-	return curMenu;
+    delete fac;
+    fac = pFac;
 }
 
-void MenuMgr::release()
-{	
-	if (instance != nullptr) {
-		delete instance;
-		instance = nullptr;
-	}
-}
-
-void MenuMgr::setMenuFactory(AbsMenuFactory * pfac)
+Menu* MenuMgr::getMenu(int menuID)
 {
-	delete fac;
-	fac = pfac;
-}
+    if(menuID < MenuID::MAIN_MENU || menuID >= MenuID::MENU_COUNT) {
+        menuID = MenuID::MAIN_MENU;
+    }
 
-Menu * MenuMgr::getMenu(int menuID)
-{
-	if (menuID < MenuID::MAIN_MENU || menuID >= MenuID::MENU_COUNT) {
-		menuID = MenuID::MAIN_MENU;
-	}
-	if (menus[menuID] == nullptr) {
-		menus[menuID] = fac->createMenu(menuID);
-	}
-	return menus[menuID];
+    if(menus[menuID] == nullptr) {
+        menus[menuID] = fac->createMenu(menuID);
+    }
+    return menus[menuID];
 }
-
-void MenuMgr::setCurMenu(int menuID)
+void  MenuMgr::setCurMenu(int menuID)
 {
-	curMenu = getMenu(menuID);
+    curMenu = getMenu(menuID);
 }

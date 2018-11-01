@@ -1,13 +1,19 @@
-#ifndef ABS_MENU_FACTORY_H
-#define ABS_MENU_FACTORY_H
+///======================================================================
+///  Project:   Richer02
+/// FileName:	absmenufactory.h
+///     Desc:   Richer 02
+///   Author:	Chen Wei
+///======================================================================
+#ifndef ABSMENUFACTORY_H
+#define ABSMENUFACTORY_H
 
 class Menu;
 class AbsMenuFactory
 {
 public:
-	AbsMenuFactory();
-	virtual ~AbsMenuFactory();
-	virtual Menu* createMenu(int menuID) = 0;
+    AbsMenuFactory();
+    virtual ~AbsMenuFactory();
+    virtual Menu* createMenu(int menuID) = 0;
 };
 
-#endif // ABS_MENU_FACTORY_H
+#endif // ABSMENUFACTORY_H

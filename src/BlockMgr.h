@@ -1,25 +1,33 @@
-#ifndef BLOCK_MGR_H
-#define BLOCK_MGR_H
-#include "Global.h"
+///======================================================================
+///  Project:   Richer02
+/// FileName:	blockmgr.h
+///     Desc:   Richer 02
+///   Author:	Chen Wei
+///======================================================================
+#ifndef BLOCKMGR_H
+#define BLOCKMGR_H
 
 class Block;
 class BlockMgr
 {
 public:
-	static BlockMgr* getInstance();
-	static void release();
+    static BlockMgr* getMgr();
+    static void releaseMgr();
 private:
-	static BlockMgr* instance;
+    static BlockMgr* mgr;
 private:
-	BlockMgr();
-	BlockMgr(const BlockMgr&);
-	BlockMgr& operator=(const BlockMgr&) = delete;
+    BlockMgr();
+    BlockMgr(const BlockMgr&);
+    BlockMgr& operator=(const BlockMgr&);
 public:
-	virtual ~BlockMgr();
-	virtual Block* cloneBlock(int blockID);
-	void setPrototype(int blockID, Block * proto);
+    virtual ~BlockMgr();
+    virtual Block* cloneBlock(int blockID);
+    void setPrototype(int blockID, Block * proto);
 protected:
-	Block* prototypes[BlockID::BLOCK_COUNT];
+    Block* prototypes[BlockID::BLOCK_COUNT];
+protected:
+
+private:
 };
 
-#endif // !BLOCK_MGR_H
+#endif // BLOCKMGR_H

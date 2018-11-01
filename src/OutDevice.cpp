@@ -1,86 +1,50 @@
-#include "OutDevice.h"
-#include <iostream>
-using namespace std;
+///======================================================================
+///  Project:   Richer03
+/// FileName:	outdevice.cpp
+///     Desc:   Richer 02
+///   Author:	Chen Wei
+///======================================================================
+#include "outdevice.h"
 
-void StreamDevice::draw(const char * pstr)
+OutDevice& OutDevice::getConsole()
 {
-	cout << pstr;
+    static StreamDevice console;
+    return console;
+}
+OutDevice& OutDevice::getTabConsole()
+{
+    static TabDeviceDecorator console(OutDevice::getConsole());
+    return console;
 }
 
-void StreamDevice::drawLn(const char * pstr)
+const OutDevice& StreamDevice::draw(const char* str) const
 {
-	cout << pstr << endl;
-}
+    stream << str;
+    return *this;
 
-OutDevice::~OutDevice()
-{
 }
-
-StreamDeviceDecorator::StreamDeviceDecorator(StreamDevice * d):device(d)
+const OutDevice& StreamDevice::drawLn(const char* str) const
 {
+    stream << str << "\n";
+    return *this;
 }
-
-void StreamDeviceDecorator::draw(const char * pstr)
+///-----------------------------------------
+///
+///-----------------------------------------
+const OutDevice& DeviceDecorator::draw(const char* str) const
 {
-	device->draw(pstr);
+    return component.draw(str);
 }
-
-void StreamDeviceDecorator::drawLn(const char * pstr)
+const OutDevice& DeviceDecorator::drawLn(const char* str) const
 {
-	device->drawLn(pstr);
+    return component.drawLn(str);
 }
-
-StreamDeviceTabDecorator::StreamDeviceTabDecorator(StreamDevice * d):StreamDeviceDecorator(d)
+///-----------------------------------------
+const OutDevice& TabDeviceDecorator::draw(const char* str) const
 {
+    return component.draw("\t").draw(str);
 }
-
-void StreamDeviceTabDecorator::draw(const char * pstr)
+const OutDevice& TabDeviceDecorator::drawLn(const char* str) const
 {
-	drawTab();
-	StreamDeviceDecorator::draw(pstr);
-}
-
-void StreamDeviceTabDecorator::drawLn(const char * pstr)
-{
-	drawTab();
-	StreamDeviceDecorator::drawLn(pstr);
-}
-
-void StreamDeviceTabDecorator::drawTab()
-{
-	cout << "\t";
-}
-
-void PrinterDevice::draw(const char * pstr)
-{
-	cout << "print " << pstr << "to printer"<<endl;
-}
-
-void PrinterDevice::drawLn(const char * pstr)
-{
-	cout << "print " << pstr << endl << "to printer" << endl;
-}
-
-void PrinterDeviceProxy::draw(const char * pstr)
-{
-	OutDevice* d=new PrinterDevice();
-	d->draw(pstr);
-	delete d;
-}
-
-void PrinterDeviceProxy::drawLn(const char * pstr)
-{
-	OutDevice* d = new OnlinePrinterDevice();
-	d->drawLn(pstr);
-	delete d;
-}
-
-void OnlinePrinterDevice::draw(const char * pstr)
-{
-	cout << "print " << pstr << "to online printer" << endl;
-}
-
-void OnlinePrinterDevice::drawLn(const char * pstr)
-{
-	cout << "print " << pstr << endl << "to online printer" << endl;
+    return component.draw("\t").drawLn(str);
 }

@@ -1,23 +1,30 @@
-#ifndef MENU_FACTORY_H
-#define MENU_FACTORY_H
-#include "AbsMenuFactory.h"
+///======================================================================
+///  Project:   Richer02
+/// FileName:	menufactory.h
+///     Desc:   Richer 02
+///   Author:	Chen Wei
+///======================================================================
+#ifndef MENUFACTORY_H
+#define MENUFACTORY_H
+
+#include "absmenufactory.h"
+
 class Menu;
 
-class MenuFactory :public AbsMenuFactory
+class MenuFactory:public AbsMenuFactory
 {
 public:
-	MenuFactory();
-	virtual ~MenuFactory();
-	virtual Menu * createMenu(int menuID);
+    MenuFactory();
+    virtual ~MenuFactory();
+    virtual Menu * createMenu(int menuID);
 };
 
-class MyMenuFactory :public AbsMenuFactory
+class MyMenuFactory:public AbsMenuFactory
 {
 public:
-	MyMenuFactory();
-	virtual ~MyMenuFactory();
-	virtual Menu * createMenu(int menuID);
+    MyMenuFactory();
+    virtual ~MyMenuFactory();
+    virtual Menu * createMenu(int menuID);
 };
 
-
-#endif // !MENU_FACTORY_H
+#endif // MENUFACTORY_H

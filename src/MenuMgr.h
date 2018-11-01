@@ -1,29 +1,39 @@
-#ifndef MENU_MGR_H
-#define MENU_MGR_H
-#include "Menu.h"
-#include "MenuFactory.h"
-#include "AbsMenuFactory.h"
-#include "Global.h"
+///======================================================================
+///  Project:   Richer02
+/// FileName:	menumgr.h
+///     Desc:   Richer 02
+///   Author:	Chen Wei
+///======================================================================
+#ifndef MENUMGR_H
+#define MENUMGR_H
 
-class MenuMgr {
-private:
-	MenuMgr() {}
-	MenuMgr(const MenuMgr&) {}
-	MenuMgr& operator=(const MenuMgr&) = delete;
+#include "global.h"
+
+class Menu;
+class AbsMenuFactory;
+
+class MenuMgr
+{
 public:
-	~MenuMgr();
-	static MenuMgr* getInstance();
-	static Menu* getCurMenu();
-	static void release();
+    static MenuMgr* getMgr();
+    static void      releaseMgr();
 private:
-	Menu* getMenu(int menuID);
+    static MenuMgr* mgr;
+private:
+    MenuMgr();
+    MenuMgr(const MenuMgr&);
+    MenuMgr& operator=(const MenuMgr&);
 public:
-	void setMenuFactory(AbsMenuFactory* pfac);
-	void setCurMenu(int menuID);
+    ~MenuMgr();
+    void setMenuFactory(AbsMenuFactory* pFac);
+    Menu* getMenu(int menuID);
+public:
+    void  setCurMenu(int menuID);
+    Menu* getCurMenu() {return curMenu;}
 private:
-	static MenuMgr* instance;
-	static Menu* curMenu;
-	Menu* menus[MenuID::MENU_COUNT];
-	AbsMenuFactory* fac;
+    Menu* menus[MenuID::MENU_COUNT];
+    AbsMenuFactory* fac = nullptr;
+    Menu* curMenu = nullptr;
 };
-#endif // !MENU_MGR_H
+
+#endif // MENUMGR_H

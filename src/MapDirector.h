@@ -1,5 +1,11 @@
-#ifndef MAP_DIRECTOR_H
-#define MAP_DIRECTOR_H
+///======================================================================
+///  Project:   Richer02
+/// FileName:	mapdirector.h
+///     Desc:   Richer 02
+///   Author:	Chen Wei
+///======================================================================
+#ifndef MAPDIRECTOR_H
+#define MAPDIRECTOR_H
 
 class Map;
 class MapBuilder;
@@ -7,31 +13,30 @@ class MapBuilder;
 class MapDirector
 {
 public:
-	MapDirector(MapBuilder* aBuidler);
-	virtual ~MapDirector();
-	virtual void makeMap();
-	Map * getMap();
+    MapDirector(MapBuilder* aBuidler);
+    virtual ~MapDirector();
+    virtual void makeMap();
+    Map * getMap();
 protected:
-	MapBuilder* builder = nullptr;
-	Map *  aMap = nullptr;
+    MapBuilder* builder = nullptr;
+    Map *  aMap = nullptr;
 private:
 };
 
 
-class SunMapDirector :public MapDirector
+class SunMapDirector:public MapDirector
 {
 public:
-	SunMapDirector(MapBuilder* aBuidler);
-	virtual ~SunMapDirector() {}
-	virtual void makeMap();
+    SunMapDirector(MapBuilder* aBuidler);
+    virtual ~SunMapDirector(){}
+    virtual void makeMap();
 };
 
-class LinkedMapDirector :public MapDirector
+class LinkedMapDirector:public MapDirector
 {
 public:
-	LinkedMapDirector(MapBuilder* aBuidler);
-	virtual ~LinkedMapDirector() {}
-	virtual void makeMap();
+    LinkedMapDirector(MapBuilder* aBuidler);
+    virtual ~LinkedMapDirector(){}
+    virtual void makeMap();
 };
-
-#endif // MAP_DIRECTOR_H
+#endif // MAPDIRECTOR_H

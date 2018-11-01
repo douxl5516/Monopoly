@@ -1,94 +1,91 @@
-#include <iostream>
+///======================================================================
+///  Project:   Richer02
+/// FileName:	game.cpp
+///     Desc:   Richer 01
+///   Author:	Chen Wei
+///======================================================================
+#include "global.h"
 
-#include "Global.h"
-#include "Game.h"
-#include "Menu.h"
-#include "MenuMgr.h"
-#include "Map.h"
-#include "MapMgr.h"
-#include "BlockMgr.h"
-#include "Player.h"
-#include "PlayerMgr.h"
+#include "game.h"
+#include "menu.h"
+#include "menumgr.h"
+#include "menufactory.h"
+#include "blockmgr.h"
+#include "map.h"
+#include "mapmgr.h"
+#include "outdevice.h"
 
-using namespace std;
+Game* Game::game = nullptr;
 
-Game* Game::instance = nullptr;
+Game* Game::getGame()
+{
+    if(game == nullptr) {
+        game = new Game;
+    }
+    return game;
+}
+void  Game::releaseGame()
+{
+    delete game;
+    game = nullptr;
+}
 
 void Game::init()
 {
-	MenuMgr::getInstance()->setMenuFactory(new MenuFactory);
-	MenuMgr::getInstance()->setCurMenu(MenuID::MAIN_MENU);
-	MapMgr::getInstance()->createMap();
-	players = 3;
-	volume = 50;
-	resolution = 1;
+    MenuMgr::getMgr()->setMenuFactory(new MenuFactory);
+    MenuMgr::getMgr()->setCurMenu(MenuID::MAIN_MENU);
+    MapMgr::getMgr()->createMap();
 }
 void Game::run()
 {
-	while (MenuMgr::getCurMenu()->process());
+    bool running = true;
+    OutDevice& dev = OutDevice::getTabConsole();
+    while(running) {
+        running = MenuMgr::getMgr()->getCurMenu()->process(dev);
+    }
 }
 void Game::term()
 {
-	MenuMgr::release();
-	MapMgr::release();
-	BlockMgr::release();
-}
-void Game::play()
-{
-	bool running = true;
-	while (PlayerMgr::getInstance()->Do());
-}
-void Game::setPlayers(int n)
-{
-	players = n;
-	cout << "Set Players count to " << players << endl;
-}
-void Game::loadFrom(int n)
-{
-	cout << "Load Recording from  " << n << endl;
-}
-void Game::saveTo(int n) {
-	cout << "Save Recording to " << n << endl;
-}
-void Game::setVolume(int n)
-{
-	volume = n;
-	cout << "Set Volume to " << n << endl;
-}
-void Game::setResolution(int n)
-{
-
-	switch (n) {
-	case 1:
-		cout << "640x320" << endl;
-		resolution = 1;
-		break;
-	case 2:
-		cout << "800x600" << endl;
-		resolution = 2;
-		break;
-	case 3:
-		cout << "1024x768" << endl;
-		resolution = 3;
-		break;
-	default:
-		break;
-	}
+    MenuMgr::releaseMgr();
+    MapMgr::releaseMgr();
+    BlockMgr::releaseMgr();
 }
 
-void Game::setCurMenu(int menuID)
+/**
+void Game::createMap()
 {
-	MenuMgr::getInstance()->setCurMenu(menuID);
-}
+    delete curMap;
+    curMap = nullptr;
 
-Game * Game::getInstance()
-{
-	if (instance == nullptr)
-		instance = new Game;
-	return instance;
-}
+    //MapBuilder* builder = new MapBuilder;
+    //MapDirector* director = new MapDirector(builder);
+    MapBuilder* builder = new EFMapBuilder;
+    MapDirector* director = new SunMapDirector(builder);
 
-void Game::release()
-{
-	delete instance;
+    director->makeMap();
+    curMap = director->getMap();
+    delete director;
+    delete builder;
+**/
+
+/**
+curMap = new Map;
+
+int layout[BlockID::BLOCK_ROWS][BlockID::BLOCK_COLS] = {
+    {1, 1, 1, 1, 1},
+    {2, 0, 0, 0, 2},
+    {3, 0, 0, 0, 3},
+    {4, 0, 0, 0, 4},
+    {1, 1, 1, 1, 1}
+};
+
+BlockFactory* blockFac  = new BlockFactory;
+for(int r = 0; r < BlockID::BLOCK_ROWS; ++r) {
+    for(int c = 0; c < BlockID::BLOCK_COLS; ++c) {
+        curMap->setBlock(r, c, blockFac->createBlock(layout[r][c]));
+    }
 }
+delete blockFac;
+**/
+//}
+

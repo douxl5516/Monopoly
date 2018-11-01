@@ -1,102 +1,117 @@
+///======================================================================
+///  Project:   Richer02
+/// FileName:	menu.h
+///     Desc:
+///   Author:	Chen Wei
+///  History:
+///======================================================================
 #ifndef MENU_H
 #define MENU_H
 
-class Game;
 class OutDevice;
+class Game;
 class Menu
 {
 public:
-	Menu() {}
-	virtual ~Menu() {}
-	virtual bool process();
-	virtual void show(OutDevice* out) const = 0;
-	virtual int  getChoice() const;
-	virtual bool doChoice(int choice) = 0;
+    Menu() {}
+    virtual ~Menu() {}
+    virtual bool process(const OutDevice& dev) ;
+protected:
+    virtual void show(const OutDevice& dev) const = 0;
+    virtual int  getChoice() const;
+    virtual bool doChoice(int choice, const OutDevice& dev) = 0;
 };
-///------÷˜≤Àµ•--------------------------------
-class MainMenu : public Menu
+///------‰∏ªËèúÂçï--------------------------------
+class MainMenu: public Menu
 {
 protected:
-	virtual void show(OutDevice* out) const;
-	virtual bool doChoice(int choice);
+    virtual void show(const OutDevice& dev) const;
+    virtual bool doChoice(int choice, const OutDevice& dev);
 };
-///------ÕÊº“»À ˝≤Àµ•--------------------------------
-class PlayersMenu : public Menu
+///------Áé©ÂÆ∂‰∫∫Êï∞ËèúÂçï--------------------------------
+class PlayersMenu: public Menu
 {
 protected:
-	virtual void show(OutDevice* out) const;
-	virtual bool doChoice(int choice);
+    virtual void show(const OutDevice& dev) const;
+    virtual bool doChoice(int choice, const OutDevice& dev);
 };
-///-------‘ÿ»Î≤Àµ•----------------------------------
-class LoadRecordMenu : public Menu
+///-------ËΩΩÂÖ•ËèúÂçï----------------------------------
+class LoadingMenu: public Menu
 {
 protected:
-	virtual void show(OutDevice* out) const;
-	virtual bool doChoice(int choice);
+    virtual void show(const OutDevice& dev) const;
+    virtual bool doChoice(int choice, const OutDevice& dev);
 };
-///-------±£¥Ê≤Àµ•----------------------------------
-class SaveRecordMenu : public Menu
+///-------‰øùÂ≠òËèúÂçï----------------------------------
+class SaveMenu: public Menu
 {
 protected:
-	virtual void show(OutDevice* out) const;
-	virtual bool doChoice(int choice);
+    virtual void show(const OutDevice& dev) const;
+    virtual bool doChoice(int choice, const OutDevice& dev);
 };
-///-------—°œÓ≤Àµ•----------------------------------
-class OptionMenu : public Menu
+///-------ÈÄâÈ°πËèúÂçï----------------------------------
+class OptionMenu: public Menu
 {
 protected:
-	virtual void show(OutDevice* out) const;
-	virtual bool doChoice(int choice);
+    virtual void show(const OutDevice& dev) const;
+    virtual bool doChoice(int choice, const OutDevice& dev);
 };
-///-------“Ù¡ø—°œÓ≤Àµ•----------------------------------
-class VolumeMenu : public Menu
+///-------Èü≥ÈáèÈÄâÈ°πËèúÂçï----------------------------------
+class VolumeMenu: public Menu
 {
 protected:
-	virtual void show(OutDevice* out) const;
-	virtual bool doChoice(int choice);
+    virtual void show(const OutDevice& dev) const;
+    virtual bool doChoice(int choice, const OutDevice& dev);
 };
-///-------∑÷±Ê¬ —°œÓ≤Àµ•----------------------------------
-class ResolutionMenu : public Menu
+///-------ÂàÜËæ®ÁéáÈÄâÈ°πËèúÂçï----------------------------------
+class ResolutionMenu: public Menu
 {
 protected:
-	virtual void show(OutDevice* out) const;
-	virtual bool doChoice(int choice);
+    virtual void show(const OutDevice& dev) const;
+    virtual bool doChoice(int choice, const OutDevice& dev);
 };
-///-------”Œœ∑≤Àµ•----------------------------------------
-class PlayMenu :public Menu {
+///-------PlayËèúÂçï----------------------------------
+class PlayMenu: public Menu
+{
 protected:
-	virtual void show(OutDevice* out) const;
-	virtual bool doChoice(int choice);
+    virtual void show(const OutDevice& dev) const;
+    virtual bool doChoice(int choice, const OutDevice& dev);
 };
 
 
-class MenuDecorator :public Menu{
+///-----------------------------------------
+///
+///-----------------------------------------
+class ProcessDecorator: public Menu
+{
 public:
-	~MenuDecorator();
-	MenuDecorator(Menu* p);
-	Menu* menu;
-
-	virtual bool process();
-	virtual void show(OutDevice* out) const;
-	virtual bool doChoice(int choice);
-};
-
-
-class HeaderDecorator :public MenuDecorator {
-public:
-	HeaderDecorator(Menu* p);
-	virtual bool process();
+    ProcessDecorator(Menu& m): menu(m) {}
+    virtual ~ProcessDecorator() { delete &menu;}
+    virtual bool process(const OutDevice& dev) ;
 protected:
-	void drawHeader();
+    virtual void show(const OutDevice& dev) const ;
+    virtual bool doChoice(int choice, const OutDevice& dev);
+private:
+    Menu& menu;
 };
-
-
-class MusicMenuDecorator :public MenuDecorator {
+class SoundDecorator: public ProcessDecorator
+{
 public:
-	MusicMenuDecorator(Menu* p);
-	virtual bool process();
-protected:
-	void playMusic();
-	void closeMusic();
+    SoundDecorator(Menu& m): ProcessDecorator(m) {}
+    virtual ~SoundDecorator() {}
+    virtual bool process(const OutDevice& dev) ;
+private:
+    void startSound();
+    void endSound();
 };
+class TitleDecorator: public ProcessDecorator
+{
+public:
+    TitleDecorator(Menu& m): ProcessDecorator(m) {}
+    virtual ~TitleDecorator() {}
+    virtual bool process(const OutDevice& dev) ;
+private:
+    void drawTitle(const OutDevice& dev);
+};
+
 #endif // MENU_H
