@@ -46,7 +46,10 @@ LuckCard::LuckCard(Player * executor, Player * target):Card(executor,target)
 
 void LuckCard::execute()
 {
-	exe->ApplyLuckCard(tar);
+	Visitor* visitor = new LuckCardVisitor(this);
+	tar->accept(visitor);
+	delete visitor;
+	//exe->ApplyLuckCard(tar);
 }
 
 ExFlyCard::ExFlyCard(Player * executor, Player * target) :Card(executor, target)
@@ -66,3 +69,29 @@ void SuperCard::execute()
 {
 	exe->ApplySuperCard(tar);
 }
+
+LuckCardVisitor::LuckCardVisitor(LuckCard * p)
+{
+	card = p;
+}
+
+void LuckCardVisitor::visit(HumanPlayer * target)
+{
+	target->ApplyLuckCard(target);
+}
+
+void LuckCardVisitor::visit(AutoPlayer * target)
+{
+	target->ApplyLuckCard(target);
+}
+
+void LuckCardVisitor::visit(TallRichHandsomePlayer * target)
+{
+	target->ApplyLuckCard(target);
+}
+
+void LuckCardVisitor::visit(WhiteRichBeautifulPlayer * target)
+{
+	target->ApplyLuckCard(target);
+}
+

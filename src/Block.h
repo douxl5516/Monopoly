@@ -9,6 +9,23 @@
 
 #include "global.h"
 class Player;
+
+
+class TripStrategy {
+public:
+	virtual bool execute(Player* player) = 0;
+};
+
+class CommonTripStategy :public TripStrategy {
+public:
+	virtual bool execute(Player* player);
+};
+
+class NervousTripStategy :public TripStrategy {
+public:
+	virtual bool execute(Player* player);
+};
+
 class Block
 {
 public:
@@ -37,12 +54,15 @@ public:
 };
 class TripBlock: public Block
 {
+private:
+	static TripStrategy* strategy;
 public:
     TripBlock() {}
-    virtual ~TripBlock() {}
+	virtual ~TripBlock();
     virtual const char* name() const { return "B";}
     virtual TripBlock* clone() override;
 	virtual bool arrive(Player* player);
+	static void setStrategy(TripStrategy* s);
 };
 class BarBlock: public Block
 {
@@ -98,4 +118,5 @@ protected:
     Block * kernel;
     Block * neighbors[DirID::DIR_COUNT];
 };
+
 #endif // BLOCK_H

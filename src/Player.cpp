@@ -16,6 +16,7 @@ using namespace std;
 #include "map.h"
 #include "block.h"
 #include "global.h"
+#include "Card.h"
 #include "PlayerState.h"
 
 
@@ -28,21 +29,25 @@ Players& Players::getPlayers()
 Players::Players()
 {
 	Block* curBlock=MapMgr::getMgr()->getCurMap()->getBlock(0);
-    Player* ps[2] = {new HumanPlayer, new AutoPlayer};
-    ps[0]->setName("HumanPlayer");
+    Player* ps[3] = {new HumanPlayer,new AutoPlayer,new TallRichHandsomePlayer};
+    ps[0]->setName("HP");
 	ps[0]->setPos(make_pair(curBlock->getRow(),curBlock->getCol()));
 	ps[0]->setDirection(DirID::DIR_NONE);
 	ps[0]->setMoney(100);
-	ps[0]->setState(new HumanCommonState);
 
-    ps[1]->setName("AutoPlayer");
+    ps[1]->setName("AP");
 	ps[1]->setPos(make_pair(curBlock->getRow(), curBlock->getCol()));
 	ps[1]->setDirection(DirID::DIR_NONE);
-	ps[1]->setMoney(100);
-	ps[1]->setState(new AutoCommonState);
+	ps[1]->setMoney(150);
+
+	ps[2]->setName("TRHP");
+	ps[2]->setPos(make_pair(curBlock->getRow(), curBlock->getCol()));
+	ps[2]->setDirection(DirID::DIR_NONE);
+	ps[2]->setMoney(200);
 
     players.push_back(ps[0]);
-    players.push_back(ps[1]);
+	players.push_back(ps[1]);
+	players.push_back(ps[2]);
 }
 
 Players::~Players()
@@ -67,15 +72,38 @@ void Players::play(bool showed)
 {
 	CppIterator* it = createCppIterator();
 	Player* player=(Player*)it->current();
+	curPlayer = player;
     while(player->play(this,showed)) {
 		//展示玩家信息
 		displayCurInfo();
         showed = true;
+
+		if (player->getMoney() <= 0) {
+			player->setDead(true);
+			TripBlock::setStrategy(new NervousTripStategy);
+			if (!judge());
+			else if (judge() == 1) {
+				cout << endl << "*****************************" << endl;
+				cout << "******Human Player Win!******" << endl;
+				cout << "*****************************" << endl << endl;
+				MenuMgr::getMgr()->setCurMenu(MenuID::MAIN_MENU);
+				break;
+			}
+			else if (judge() == 2) {
+				cout << endl << "*****************************" << endl;
+				cout << "*******Auto Player Win!******" << endl;
+				cout << "*****************************" << endl << endl;
+				MenuMgr::getMgr()->setCurMenu(MenuID::MAIN_MENU);
+				break;
+			}
+		}
+
 		it->next();
 		if (it->isLast()) {
 			it->first();
 		}
 		player = (Player*)it->current();
+		curPlayer = player;
     }
 	system("pause");
 	system("cls");
@@ -135,6 +163,31 @@ void Players::displayCurInfo()
 	cout << "===========End==============" << endl;
 }
 
+int Players::judge()
+{
+	int allHumanPlayer = 0;
+	int allAutoPlayer = 0;
+	int deadHumanPlayer = 0;
+	int deadAutoPlayer = 0;
+	for (auto player : players) {
+		if (dynamic_cast<HumanPlayer*>(player)) {
+			allHumanPlayer++;
+			if (player->isDead())
+				deadHumanPlayer++;
+		}
+		else if (dynamic_cast<AutoPlayer*>(player)) {
+			allAutoPlayer++;
+			if (player->isDead())
+				deadAutoPlayer++;
+		}
+	}
+	if (allAutoPlayer == deadAutoPlayer && allHumanPlayer - deadHumanPlayer == 1)
+		return 1;//HumanPlayer胜
+	else if (allHumanPlayer == deadHumanPlayer && allAutoPlayer - deadAutoPlayer > 0)
+		return 2;//AutoPlayer胜
+	else return 0;//未分胜负
+}
+
 void Player::setDirection(int dir)
 {
 	if (dir >= DirID::DIR_NONE&&dir < DirID::DIR_COUNT)
@@ -182,6 +235,16 @@ bool Player::isExFly()
 void Player::setExFly(bool _exFly)
 {
 	exFly = _exFly;
+}
+
+bool Player::isDead()
+{
+	return dead;
+}
+
+void Player::setDead(bool _dead)
+{
+	dead = _dead;
 }
 
 bool Player::go()
@@ -366,9 +429,19 @@ pair<int, int> Player::getPos()
 {
 	return curPos;
 }
+AutoPlayer::AutoPlayer()
+{
+	setName("");
+	setPos(make_pair(-1,-1));
+	setDirection(DirID::DIR_NONE);
+	setMoney(0);
+	setState(new AutoCommonState);
+}
 ///-----------------------------------------
 bool AutoPlayer::play(Players* p, bool showed)
 {
+	if (dead)
+		return true;
     #ifdef DEBUG_TRACE
     cout<<"AutoPlayer::showed:"<<(showed?"true":"false")<<endl;
     #endif // DEBUG_TRACE
@@ -384,9 +457,26 @@ bool AutoPlayer::play(Players* p, bool showed)
     return true;
 }
 
+void AutoPlayer::accept(Visitor * vis)
+{
+	vis->visit(this);
+}
+
+
+HumanPlayer::HumanPlayer()
+{
+	setName("");
+	setPos(make_pair(-1,-1));
+	setDirection(DirID::DIR_NONE);
+	setMoney(0);
+	setState(new HumanCommonState);
+}
+
 ///-----------------------------------------
 bool HumanPlayer::play(Players* p, bool showed)
 {
+	if (dead)
+		return true;
     #ifdef DEBUG_TRACE
     cout<<"HumanPlayer::showed:"<<(showed?"true":"false")<<endl;
     #endif // DEBUG_TRACE
@@ -405,6 +495,11 @@ bool HumanPlayer::play(Players* p, bool showed)
 		setAct(false);
         return true;
     }
+}
+
+void HumanPlayer::accept(Visitor * vis)
+{
+	vis->visit(this);
 }
 
 PlayersJavaIterator::PlayersJavaIterator(Players* p) :container(p){
@@ -552,4 +647,32 @@ int DirStrategyIndir2Dirs::getDir(Block* curBlock, vector<int> dirs, int inDir)
 int DirStrategyIndir1Dir::getDir(Block* curBlock, vector<int> dirs, int inDir)
 {
 	return dirs[0];
+}
+
+TallRichHandsomePlayer::TallRichHandsomePlayer():AutoPlayer()
+{
+}
+
+void TallRichHandsomePlayer::accept(Visitor * vis)
+{
+	vis->visit(this);
+}
+
+void TallRichHandsomePlayer::ApplyLuckCard(Player * target)
+{
+	target->setState(new MacroState(target->getState(), new LuckState(3)));
+}
+
+WhiteRichBeautifulPlayer::WhiteRichBeautifulPlayer()
+{
+}
+
+void WhiteRichBeautifulPlayer::accept(Visitor * vis)
+{
+	vis->visit(this);
+}
+
+void WhiteRichBeautifulPlayer::ApplyLuckCard(Player * target)
+{
+	target->setState(new MacroState(target->getState(), new LuckState(4)));
 }

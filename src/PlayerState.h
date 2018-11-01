@@ -63,5 +63,4 @@ public:
 	virtual ~MacroState();
 	virtual void execute(Player* p);
 };
-
 #endif // !PLAYER_STATE_H

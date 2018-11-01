@@ -20,6 +20,7 @@ class PlayerState;
 class DirStrategy;
 class Block;
 class Iterator;
+class Visitor;
 
 class PlayersCppIterator :public CppIterator {
 private:
@@ -63,6 +64,7 @@ public:
 	Player* getCurPlayer() { return curPlayer; }
 	Player* getPlayerByName(string name);
 	void displayCurInfo();
+	int judge();
 private:
 	deque<Player*> players;  
 	Player* curPlayer;
@@ -79,6 +81,7 @@ public:
     Player() {}
 	virtual ~Player();
 	virtual bool play(Players* p, bool showed = true) = 0;
+	virtual void accept(Visitor* vis) =0 ;
 public:
     const string& name() const { return strName;}
     void setName(const string& str);
@@ -94,6 +97,8 @@ public:
 	bool getAct();
 	bool isExFly();
 	void setExFly(bool _exFly);
+	bool isDead();
+	void setDead(bool _dead);
 public:
 	virtual bool go();
 	void ApplyRobCard(Player * target);
@@ -102,7 +107,7 @@ public:
 	void ApplyMeanCard();
 	void ApplyReturnSpell(Player * target);
 	void ApplyHurtSpell(Player * target);
-	void ApplyLuckCard(Player * target);
+	virtual void ApplyLuckCard(Player * target);
 	void ApplyExFlyCard(Player * target);
 	void ApplySuperCard(Player * target);
 protected:
@@ -111,6 +116,7 @@ protected:
 	int direction;
 	bool actThisRound;
 	bool exFly;
+	bool dead;
 	pair<int, int> curPos;
 	DirStrategy* curStrategy;
 	PlayerState* curState;
@@ -119,16 +125,36 @@ protected:
 class AutoPlayer: public Player
 {
 public:
-    AutoPlayer() {}
+	AutoPlayer();
     virtual ~AutoPlayer() {}
     virtual bool play(Players* p,bool showed = true);
+	virtual void accept(Visitor* vis);
 };
 class HumanPlayer: public Player
 {
 public:
-    HumanPlayer() {}
+    HumanPlayer();
     virtual ~HumanPlayer() {}
     virtual bool play(Players* p,bool showed = true);
+	virtual void accept(Visitor* vis);
+};
+
+class TallRichHandsomePlayer : public AutoPlayer
+{
+public:
+	TallRichHandsomePlayer();
+	virtual ~TallRichHandsomePlayer() {}
+	virtual void accept(Visitor* vis);
+	virtual void ApplyLuckCard(Player * target);
+};
+
+class WhiteRichBeautifulPlayer : public AutoPlayer
+{
+public:
+	WhiteRichBeautifulPlayer();
+	virtual ~WhiteRichBeautifulPlayer() {}
+	virtual void accept(Visitor* vis);
+	virtual void ApplyLuckCard(Player * target);
 };
 
 class DirStrategy{

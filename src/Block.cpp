@@ -10,6 +10,8 @@
 #include <iostream>
 using namespace std;
 
+TripStrategy* TripBlock::strategy = new CommonTripStategy;
+
 Block::Block()
 {
     //ctor
@@ -29,16 +31,23 @@ bool MoneyBlock::arrive(Player * player)
 	cout << "A money block, got 5 coins!" << endl;
 	return true;
 }
+TripBlock::~TripBlock()
+{
+	delete strategy;
+}
 TripBlock* TripBlock::clone()
 {
     return new TripBlock(*this);
 }
 bool TripBlock::arrive(Player * player)
 {
-	int lostMoney = player->getMoney() >= 20 ? 20 : player->getMoney();
-	player->setMoney(player->getMoney() - lostMoney);
-	cout << "A trip block, lost " << lostMoney << " coins!" << endl;
-	return true;
+	return strategy->execute(player);
+}
+void TripBlock::setStrategy(TripStrategy * s)
+{
+	delete strategy;
+	strategy = nullptr;
+	strategy = s;
 }
 BarBlock* BarBlock::clone()
 {
@@ -48,6 +57,7 @@ bool BarBlock::arrive(Player * player)
 {
 	if (player->isExFly()) {
 		cout << "A bar block. ExFly state! Continue!" << endl;
+		return true;
 	}
 	else {
 		cout << "A bar block, halt!" << endl;
@@ -61,7 +71,7 @@ SlideBlock* SlideBlock::clone()
 
 bool SlideBlock::arrive(Player * player)
 {
-	cout << "A slide block, goes another two steps!" << endl;
+	cout << "A slide block, went another two steps!" << endl;
 	int i = 2;
 	while (i--) {
 		bool res = player->go();
@@ -134,4 +144,20 @@ bool LinkedBlock::arrive(Player * player)
 	cout << "** Player " << player->name() << " arrived at [" << pos.first << "," << pos.second << "]. ";
 	player->setPos(pos);
 	return kernel->arrive(player);
+}
+
+bool CommonTripStategy::execute(Player * player)
+{
+	int lostMoney = player->getMoney() >= 20 ? 20 : player->getMoney();
+	player->setMoney(player->getMoney() - lostMoney);
+	cout << "A trip block, lost " << lostMoney << " coins!" << endl;
+	return true;
+}
+
+bool NervousTripStategy::execute(Player * player)
+{
+	int lostMoney = player->getMoney() >= 200 ? 200 : player->getMoney();
+	player->setMoney(player->getMoney() - lostMoney);
+	cout << "A trip block, lost " << lostMoney << " coins!" << endl;
+	return true;
 }
